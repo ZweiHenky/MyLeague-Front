@@ -1,7 +1,6 @@
 import React from 'react'
 import { Tabs } from 'expo-router'
 import Icon from '@expo/vector-icons/FontAwesome6'
-import { Ionicons, Feather, SimpleLineIcons, AntDesign } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default function _layout() {
@@ -21,10 +20,8 @@ export default function _layout() {
       tabBarInactiveTintColor: "#8E8E93",
       headerShown: false,
       tabBarShowLabel:false,
-      animation:"shift",
-      tabBarButton(props) {
-          return <TouchableOpacity {...props} />
-      },
+      animation:"none",
+      tabBarButton: (props) => <TouchableOpacity {...props} activeOpacity={1} />,
     }}
   >
 
@@ -40,7 +37,7 @@ export default function _layout() {
 
             return (
               <View style={styles.container}>
-                <AntDesign name="home"size={18} color={color} />
+                <Icon name="house"size={18} color={color} />
                 <Text style={styles.text}>Inicio</Text>
               </View>
             )
@@ -48,7 +45,7 @@ export default function _layout() {
         }
       }
     /> 
-    <Tabs.Screen name='teams/index' 
+    <Tabs.Screen name='teams' 
       options={
         {
           title:"equipos",
@@ -68,28 +65,28 @@ export default function _layout() {
         }
       }
     /> 
-    <Tabs.Screen name='leagues/index'
+    <Tabs.Screen name='leagues'
       options={
         {
           title:"Ligas",
           tabBarIcon: ({color, size, focused})=>{
 
             if (!focused) {
-              return <Icon name="sitemap"size={20} color={color} />
+              return <Icon name="trophy"size={20} color={color} />
             }
 
             return (
               <View style={styles.container}>
-                <Icon name="sitemap" size={16} color={color} />
+                <Icon name="trophy" size={16} color={color} />
                 <Text style={styles.text}>Ligas</Text>
               </View>
             )
-          },
+          }
         }
       }
     /> 
 
-    <Tabs.Screen name='settings/index' 
+    <Tabs.Screen name='settings' 
       options={
         {
           tabBarIcon: ({color, size, focused})=>{

@@ -2,64 +2,67 @@ import { View, Text, FlatList, Image } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 import React from 'react'
 
-type FavoriteData = {
-  name: String,
-  url:String
-}
+import FavoriteItem from '@/presentation/components/home/FavoriteItem'
+import MainCarousel from '@/presentation/components/home/MainCarousel'
+import { LigasData } from '@/presentation/components/home/types'
 
-const data: FavoriteData[] = [
+
+const data: LigasData[] = [
   {
     name:'Equipo1',
-    url:'../../../assets/images/favoritos/manchester.png'
+    url:'../../../assets/images/favoritos/manchester.png',
+    prize:"10000",
+    divisions: "10",
+    teams:"10",
+    location:"lago cuitzeo 107"
+
   },
   {
     name:'Equipo2',
-    url:'file:///myLeague/app/images/favoritos/NE.png'
+    url:'file:///myLeague/app/images/favoritos/NE.png',
+    prize:"10000",
+    divisions: "10",
+    teams:"10",
+    location:"lago cuitzeo 107"
   },
   {
-    name:'Equipo1',
-    url:'../../../assets/images/favoritos/manchester.png'
+    name:'Equipo3',
+    url:'../../../assets/images/favoritos/manchester.png',
+    prize:"10000",
+    divisions: "10",
+    teams:"10",
+    location:"lago cuitzeo 107"
   },
   {
-    name:'Equipo2',
-    url:'file:///myLeague/app/images/favoritos/NE.png'
+    name:'Equipo4',
+    url:'file:///myLeague/app/images/favoritos/NE.png',
+    prize:"10000",
+    divisions: "10",
+    teams:"10",
+    location:"lago cuitzeo 107"
   }
 ]
 
-const FavoriteItem = ({name, url}:FavoriteData) =>{
-  console.log(url);
-  
-  return(
-    <View className=' mx-2 h-[120] w-[100] items-center '>
-      <Image
-       source={require('../../../assets/images/favoritos/logo.jpg')} 
-       className='w-full h-full absolute rounded-lg object-contain'
-       />
-       <View className='w-[100%] h-[99%] items-center justify-center'>
-        <LinearGradient
-          colors={['transparent', '#00000060']}
-          className='w-[95%] h-[100%] justify-end '
-        >
-          <Text className='text-white p-1 text-center text-lg '>{name}</Text>
-        </LinearGradient>
-       </View>
-    </View>
-  )
-}
+
 
 export default function index() {
   return (
     <View className='p-3'>
       <View>
-        <Text className='text-2xl '>Favoritos</Text>
+        <Text className='text-2xl p-2'>Favoritos</Text>
         <FlatList 
           data={data}
-          renderItem={(data) => <FavoriteItem name={data.item.name} url={data.item.url} />}
+          renderItem={(data) => <FavoriteItem item={data.item} />}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
       </View>
-      <View></View>
+      <View>
+        <Text className='text-2xl p-2 mt-5'>
+          Ligas más cerca de tí
+        </Text>
+        <MainCarousel ligas = {data}/>
+      </View>
     </View>
   )
 }
