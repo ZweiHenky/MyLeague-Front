@@ -5,11 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "myleagueapp",
     "userInterfaceStyle": "automatic",
-    "androidNavigationBar":{
-      "barStyle":"dark-content",
-      "backgroundColor":"white"
+    "androidNavigationBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#ffffff"
     },
     "newArchEnabled": true,
     "ios": {
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ronnhy7.myLeague"
     },
     "web": {
       "bundler": "metro",
@@ -31,7 +32,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -40,6 +41,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8b360229-6348-4114-b2b5-2fdcc58d80e5"
+      }
     }
   }
 }
