@@ -4,73 +4,58 @@ import { SecureStorageAdapter } from "@/helpers/adapters/secure-storage.adapter"
 import { create } from 'zustand'
 
 
-export type AuthStatus = 'authenticated' | 'unauthenticated' | 'checking'
+export type AuthStatus = 'authenticated' | 'unauthenticated' | 'checking';
 
 export interface AuthState {
-    status: AuthStatus,
-    token?: string,
-    user?:User
+  status: AuthStatus;
+  token?: string;
+  user?: User;
 
-    login: (email:string, password:string) => Promise<boolean>,
-    checkStatus: () => Promise<void>,
-    logOut: () => Promise<void>
+  login: (email: string, password: string) => Promise<boolean>;
+  checkStatus: () => Promise<void>;
+  logout: () => Promise<void>;
+
+  changeStatus: (token?: string, user?: User) => Promise<boolean>;
 }
 
-export const useAuthStore = create<AuthState>()( (set, get) => ({
-    // props
-    status:'checking',
-    token: undefined,
-    user: undefined,
+export const useAuthStore = create<AuthState>()((set, get) => ({
+  // Properties
+  status: 'checking',
+  token: undefined,
+  user: undefined,
 
-    // actions
-    login: async(email:string, password:string) => {
+  // Actions
+  changeStatus: async (token?: string, user?: User) => {
+    if (!token || !user) {
+      set({ status: 'unauthenticated', token: undefined, user: undefined });
+      await SecureStorageAdapter.deleteItem('token');
+      return false;
+    }
 
-        const res = await authLogin(email, password)
+    set({
+      status: 'authenticated',
+      token: token,
+      user: user,
+    });
 
-        if (!res) {
-            get().logOut()
-            return false
-        }
+    await SecureStorageAdapter.setItem('token', token);
 
-        set({
-            status: 'authenticated',
-            token: res.token,
-            user: res.user
-        })
+    return true;
+  },
 
-        await SecureStorageAdapter.setItem('token', res.token)
+  login: async (email: string, password: string) => {
+    const resp = await authLogin(email, password);
+    return get().changeStatus(resp?.token, resp?.user);
+  },
 
-        return true
-    },
+  checkStatus: async () => {
+    const resp = await authCheckStatus();
+    get().changeStatus(resp?.token, resp?.user);
+  },
 
-    checkStatus: async() => {
-        const res = await authCheckStatus()
+  logout: async () => {
+    SecureStorageAdapter.deleteItem('token');
 
-        console.log(res);
-        
-
-        if (!res) {
-            get().logOut()
-            return 
-        }
-
-        set({
-            status: 'authenticated',
-            token: res.token,
-            user: res.user
-        })
-
-        await SecureStorageAdapter.setItem('token', res.token)
-
-        return 
-    },
-
-    logOut: async () => {
-
-        await SecureStorageAdapter.deleteItem('token')
-
-        set({status: 'unauthenticated', user: undefined, token: undefined})
-    },
-
-}) )
-
+    set({ status: 'unauthenticated', token: undefined, user: undefined });
+  },
+}));

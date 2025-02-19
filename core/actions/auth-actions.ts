@@ -1,16 +1,7 @@
 import { Alert } from "react-native";
 import { myLeagueApi } from "../api/myLeaguesApi";
-import { User } from "../interfaces/auth/user";
-
-export interface AuthResponse {
-    token:        string;
-    usu_id:       number;
-    usu_name:     string;
-    usu_last:     string;
-    usu_email:    string;
-    usu_tel:      string;
-}
-
+import { AuthResponse } from "@/infraestructure/interfaces/authdb-response";
+import { User } from "@/infraestructure/interfaces/user.interface";
 
 const returnUserToken = (data:AuthResponse): { user:User, token:string } =>{
     const {token, ...user} = data
@@ -40,6 +31,28 @@ export const authLogin = async (usu_email:string, usu_pass:string) =>{
 
 }
 
+export const authRegister = async(usu_name:string, usu_last: string, usu_email:string, usu_tel:string, usu_pass:string)=>{
+
+    try {
+        
+        const {data} = await myLeagueApi.post('/auth/register', {
+                usu_name,
+                usu_last,
+                usu_email,
+                usu_tel,
+                usu_pass
+            }
+        )
+
+        return data
+        
+
+    } catch (error) {
+        return error
+    }
+
+}
+
 export const authCheckStatus = async () =>{
 
     try {
@@ -47,6 +60,7 @@ export const authCheckStatus = async () =>{
         const { data } = await myLeagueApi.get<AuthResponse>('/auth/verifyToken')
         
         return returnUserToken(data)
+
     } catch (error) {
         return null
     }
