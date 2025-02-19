@@ -14,10 +14,10 @@ import { toast } from 'sonner-native';
 
 export default function Register(){
     const initialValues = {
-        usu_email:'',
-        usu_name:'',
-        usu_last:'',
-        usu_tel:'',
+        email:'',
+        nombre:'',
+        apellido:'',
+        telefono:'',
         usu_pass:'',
         usu_pass2:''
     }
@@ -45,9 +45,9 @@ export default function Register(){
                     validationSchema={registerSchema}
                     onSubmit={async(values, actions) => {
 
-                        // const {usu_email, usu_last, usu_name, usu_pass, usu_tel} = values
+                        // const {email, apellido, nombre, usu_pass, telefono} = values
 
-                        // await authRegister(usu_name, usu_last, usu_email, usu_tel, usu_pass)
+                        // await authRegister(nombre, apellido, email, telefono, usu_pass)
                         toast.success("haciendo click")
 
                         actions.setSubmitting(false)
@@ -62,27 +62,27 @@ export default function Register(){
                                     <View className='pl-3 w-[20%]'>
                                         <Icon name="user" size={18} color={"#787878"} />
                                     </View>
-                                    <ThemeInput className='w-[80%]' value={values.usu_name} onChangeText={handleChange("usu_name")} onBlur={handleBlur("usu_name")} placeholder='Nombre' />
+                                    <ThemeInput className='w-[80%]' value={values.nombre} onChangeText={handleChange("nombre")} onBlur={handleBlur("nombre")} placeholder='Nombre' />
                                 </View>
                                 <View className='flex-row bg-gray-100 rounded-2xl items-center w-[48%]'>
                                     <View className='pl-3 w-[20%]'>
                                         <Icon name="user" size={18} color={"#787878"} />
                                     </View>
-                                    <ThemeInput className='w-[80%]' value={values.usu_last} onChangeText={handleChange("usu_last")} onBlur={handleBlur("usu_last")} placeholder='Apellidos' />
+                                    <ThemeInput className='w-[80%]' value={values.apellido} onChangeText={handleChange("apellido")} onBlur={handleBlur("apellido")} placeholder='Apellidos' />
                                 </View>
                             </View>
                             
                             {
-                                errors.usu_name && touched.usu_name && (
+                                errors.nombre && touched.nombre && (
                                     <View>
-                                        <Text className='text-light-textRed'>{errors.usu_name}</Text>
+                                        <Text className='text-light-textRed'>{errors.nombre}</Text>
                                     </View>
                                 )
                             }
                             {
-                                errors.usu_last && touched.usu_last && (
+                                errors.apellido && touched.apellido && (
                                     <View>
-                                        <Text className='text-light-textRed'>{errors.usu_last}</Text>
+                                        <Text className='text-light-textRed'>{errors.apellido}</Text>
                                     </View>
                                 )
                             }
@@ -91,13 +91,13 @@ export default function Register(){
                                 <View className='pl-3 w-[10%]'>
                                     <Icon name="envelope" size={18} color={"#787878"} />
                                 </View>
-                                <ThemeInput className='w-[90%]' value={values.usu_email} onChangeText={handleChange("usu_email")} onBlur={handleBlur("usu_email")} placeholder='Ingrese su correo' />
+                                <ThemeInput className='w-[90%]' value={values.email} onChangeText={handleChange("email")} onBlur={handleBlur("email")} placeholder='Ingrese su correo' />
                             </View>
 
                             {
-                                errors.usu_email && touched.usu_email && (
+                                errors.email && touched.email && (
                                     <View>
-                                        <Text className='text-light-textRed'>{errors.usu_email}</Text>
+                                        <Text className='text-light-textRed'>{errors.email}</Text>
                                     </View>
                                 )
                             }
@@ -106,13 +106,13 @@ export default function Register(){
                                 <View className='pl-3 w-[10%]'>
                                     <Icon name="phone" size={18} color={"#787878"} />
                                 </View>
-                                <ThemeInput className='w-[90%]' value={values.usu_tel} onChangeText={handleChange("usu_tel")} onBlur={handleBlur("usu_tel")} placeholder='Ingresa tu telefono' />
+                                <ThemeInput className='w-[90%]' value={values.telefono} onChangeText={handleChange("telefono")} onBlur={handleBlur("telefono")} placeholder='Ingresa tu telefono' />
                             </View>
 
                             {
-                                errors.usu_tel && touched.usu_tel && (
+                                errors.telefono && touched.telefono && (
                                     <View>
-                                        <Text className='text-light-textRed'>{errors.usu_tel}</Text>
+                                        <Text className='text-light-textRed'>{errors.telefono}</Text>
                                     </View>
                                 )
                             }

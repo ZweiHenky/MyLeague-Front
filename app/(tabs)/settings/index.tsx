@@ -94,7 +94,7 @@ export default function index() {
         <View className='flex-row w-[90%] items-center p-5 mx-auto bg-white mt-5 justify-between rounded-xl'>
           <View className='flex-row gap-3 items-center'>
             <Icon name='id-card' size={18} color='black' />
-            <Text className='text-xl'>{user?.usu_name}</Text>
+            <Text className='text-xl'>{user?.nombre}</Text>
           </View>
           <Icon name='caret-right' size={20} color='black' />
         </View>

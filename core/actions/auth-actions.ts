@@ -13,13 +13,13 @@ const returnUserToken = (data:AuthResponse): { user:User, token:string } =>{
 }
 
 
-export const authLogin = async (usu_email:string, usu_pass:string) =>{
+export const authLogin = async (email:string, usu_pass:string) =>{
 
-    usu_email = usu_email.toLowerCase()
+    email = email.toLowerCase()
 
     try {
         const { data } = await myLeagueApi.post<AuthResponse>('/auth/login',{
-            usu_email,
+            email,
             usu_pass
         })
 
@@ -31,15 +31,15 @@ export const authLogin = async (usu_email:string, usu_pass:string) =>{
 
 }
 
-export const authRegister = async(usu_name:string, usu_last: string, usu_email:string, usu_tel:string, usu_pass:string)=>{
+export const authRegister = async(nombre:string, apellido: string, email:string, telefono:string, usu_pass:string)=>{
 
     try {
         
         const {data} = await myLeagueApi.post('/auth/register', {
-                usu_name,
-                usu_last,
-                usu_email,
-                usu_tel,
+                nombre,
+                apellido,
+                email,
+                telefono,
                 usu_pass
             }
         )
