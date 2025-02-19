@@ -1,10 +1,11 @@
 import { View, Text, FlatList, Image } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import FavoriteItem from '@/presentation/components/home/FavoriteItem'
 import MainCarousel from '@/presentation/components/home/MainCarousel'
 import { LigasData } from '@/presentation/components/home/types'
+import { toast } from 'sonner-native'
 
 
 const data: LigasData[] = [
@@ -43,8 +44,6 @@ const data: LigasData[] = [
   }
 ]
 
-
-
 export default function index() {
   return (
     <View className='p-3'>
@@ -58,7 +57,7 @@ export default function index() {
         />
       </View>
       <View>
-        <Text className='text-2xl p-2 mt-5'>
+        <Text className='text-2xl p-2 mt-5' onPress={()=> toast.success("hola")}>
           Ligas más cerca de tí
         </Text>
         <MainCarousel ligas = {data}/>

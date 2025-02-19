@@ -6,7 +6,7 @@ import { router } from 'expo-router'
 
 export default function index() {
 
-  const {logOut, user, status, checkStatus} = useAuthStore()
+  const {logout, user, status, checkStatus} = useAuthStore()
 
   useEffect(() => {
     checkStatus()
@@ -140,7 +140,7 @@ export default function index() {
           </Pressable>
 
           <View className='w-[90%] bg-light-primary h-[0.8px] mx-auto' />
-            <Pressable onPress={logOut} className='flex-row w-full items-center p-5 mx-auto bg-white justify-between rounded-xl'>
+            <Pressable onPress={logout} className='flex-row w-full items-center p-5 mx-auto bg-white justify-between rounded-xl'>
               <View className='flex-row gap-3 items-center'>
                 <Icon name='right-from-bracket' size={18} color='black' />
                 <Text className='text-lg'>Cerrar sesion</Text>

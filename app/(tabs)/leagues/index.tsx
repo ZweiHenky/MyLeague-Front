@@ -1,10 +1,10 @@
 import { View, Text, ScrollView, Pressable, Image, ActivityIndicator } from "react-native";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef,  } from "react";
 import ligaInterface from "@/infraestructure/interfaces/ligas";
 import Icon from "@expo/vector-icons/FontAwesome6";
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useAuthStore } from "@/presentation/store/auth/useAuthStore";
-import { Redirect, router } from "expo-router";
+import { router } from "expo-router";
 
 const ligas: ligaInterface[] = [
   {
@@ -37,71 +37,61 @@ const ligas: ligaInterface[] = [
 ];
 
 export default function Index() {
+  const { checkStatus, status } = useAuthStore();
 
-  const {checkStatus, status} = useAuthStore()
-    // 🔹 Creamos un array de sharedValues para cada tarjeta
-  const animations = useRef(ligas.map(() => useSharedValue(0))).current;
+  useEffect(() => {
+    checkStatus();
+  }, [checkStatus]);
 
-  // 🔹 Mueve solo la tarjeta seleccionada
-  const moveAnimation = (index: any) => {
+  const animations = ligas.map(() => useSharedValue(0));
+
+  const animatedStyles = animations.map((animation) =>
+    useAnimatedStyle(() => ({
+      transform: [{ translateX: animation.value }],
+    }))
+  );
+
+  const moveAnimation = (index: number) => {
     const translateX = animations[index];
     translateX.value = translateX.value === 250 ? withTiming(0) : withTiming(250);
   };
 
-  useEffect(() => {
-    
-    checkStatus()
-
-  }, [])
-
   if (status === 'checking') {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 5,
-        }}
-      >
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom: 5 }}>
         <ActivityIndicator />
       </View>
     );
   }
 
   if (status === 'unauthenticated') {
-    // Guardar la ruta del usuario
     return (
       <View className="flex-1 items-center justify-center h-full gap-5 p-2">
-        <Text className="text-3xl text-center"> Para poder administrar una liga primero tienes que iniciar sesion </Text>
+        <Text className="text-3xl text-center">Para poder administrar una liga primero tienes que iniciar sesión</Text>
         <Pressable onPress={() => router.replace("/auth/login")} className="p-5 text-center rounded-xl bg-light-primary">
-            <Text className="text-white text-xl">Iniciar Sesion</Text>
+          <Text className="text-white text-xl">Iniciar Sesión</Text>
         </Pressable>
       </View>
-    )
+    );
   }
-  
 
+  return (
+    <ScrollView
+      contentContainerStyle={{
+        alignItems: "center",
+        paddingTop: 20,
+        paddingBottom: 50,
+        flexGrow: 1,
+      }}
+      style={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+    >
+      <Pressable className='p-3 w-12 bg-light-primary rounded-full items-center absolute right-3 bottom-3 z-50' onPress={() => router.push("/leagues/addLeague")}>
+        <Icon name='plus' size={18} color="white" />
+      </Pressable>
 
-return (
-  <ScrollView
-    contentContainerStyle={{
-      alignItems: "center",
-      paddingTop: 20,
-      paddingBottom: 50,
-    }}
-    style={{ flex: 1 }}
-    showsVerticalScrollIndicator={false}
-  >
-    {ligas.map((liga, index) => {
-      // 🔹 Animación específica para cada tarjeta
-      const animatedStyle = useAnimatedStyle(() => ({
-        transform: [{ translateX: animations[index].value }],
-      }));
-
-      return (
+      {ligas.map((liga, index) => (
         <View key={liga.id} className="justify-between gap-4 w-[90%] mb-10">
-          {/* Botones de fondo */}
           <View className="absolute w-full bg-light-primary gap-5 h-full flex-row -z-10 rounded-xl items-center px-5">
             <View className="items-center gap-1">
               <Icon name="trash" color="white" size={18} />
@@ -119,8 +109,7 @@ return (
             </View>
           </View>
 
-          {/* Contenido animado */}
-          <Animated.View style={[animatedStyle]} className="bg-white rounded-xl p-5">
+          <Animated.View style={[animatedStyles[index]]} className="bg-white rounded-xl p-5">
             <Pressable
               className="w-full p-3 rounded-xl h-full absolute z-50"
               onPress={() => moveAnimation(index)}
@@ -137,8 +126,7 @@ return (
             </View>
           </Animated.View>
         </View>
-      );
-    })}
-  </ScrollView>
-);
+      ))}
+    </ScrollView>
+  );
 }
