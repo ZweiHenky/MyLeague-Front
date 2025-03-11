@@ -7,6 +7,6 @@ interface Props extends TextInputProps {
 
 export default function ThemeInput({className, ...rest} : Props ) {
   return (
-    <TextInput className={`rounded-2xl bg-gray-100 py-5 ${className}`} {...rest}/>
+    <TextInput className={` active:opacity-50 rounded-2xl bg-gray-100 py-5 ${className}`} {...rest}/>
   )
 }

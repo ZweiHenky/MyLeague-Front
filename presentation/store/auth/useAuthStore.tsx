@@ -1,6 +1,6 @@
-import { authCheckStatus, authLogin } from "@/core/actions/auth-actions"
-import { User } from "@/core/interfaces/auth/user"
+import { authCheckStatus, authLogin, authRegister } from "@/core/actions/auth-actions"
 import { SecureStorageAdapter } from "@/helpers/adapters/secure-storage.adapter"
+import { User } from "@/infraestructure/interfaces/user.interface";
 import { create } from 'zustand'
 
 
@@ -14,6 +14,7 @@ export interface AuthState {
   login: (email: string, password: string) => Promise<boolean>;
   checkStatus: () => Promise<void>;
   logout: () => Promise<void>;
+  register:(nombre:string, apellido: string, email:string, telefono:string, password:string) => Promise<any>
 
   changeStatus: (token?: string, user?: User) => Promise<boolean>;
 }
@@ -46,6 +47,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   login: async (email: string, password: string) => {
     const resp = await authLogin(email, password);
     return get().changeStatus(resp?.token, resp?.user);
+  },
+
+  register: async (nombre:string, apellido: string, email:string, telefono:string, password:string)=>{
+    const res = await authRegister(nombre, apellido, email, telefono, password)
+
+    if (res.status == 400) {
+        return res.data
+    }
+
+    return res
   },
 
   checkStatus: async () => {
