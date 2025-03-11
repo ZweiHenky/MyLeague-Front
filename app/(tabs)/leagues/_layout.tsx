@@ -9,9 +9,9 @@ export default function _layout() {
     <Stack
       screenOptions={{
         headerShadowVisible:false,
-        contentStyle:{
-          backgroundColor:"white"
-        }
+        // contentStyle:{
+        //   backgroundColor:"white"
+        // }
       }}
     >
         <Stack.Screen 
@@ -28,6 +28,39 @@ export default function _layout() {
                 title:"Agregar Nueva Liga",
             }}
         />
+
+        <Stack.Screen 
+            name='modifyLeague/[id]'
+            options={{
+                headerTitleAlign:"center",
+                title:"Modificar Liga",
+            }}
+        />
+
+        <Stack.Screen 
+            name='divisions/[idLiga]/index'
+            options={{
+                headerTitleAlign:"center",
+                title:"Divisiones",
+            }}
+        />
+
+        <Stack.Screen 
+            name='divisions/addDivision'
+            options={{
+                headerTitleAlign:"center",
+                title:"Agregar Division",
+            }}
+        />
+
+        <Stack.Screen 
+            name='divisions/[idDivision]/modifyDivision'
+            options={{
+                headerTitleAlign:"center",
+                title:"Modificar Division",
+            }}
+        />
+
     </Stack>
   )
 }
