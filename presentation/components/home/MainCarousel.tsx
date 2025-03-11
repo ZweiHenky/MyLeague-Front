@@ -7,6 +7,7 @@ import {
     configureReanimatedLogger,
     ReanimatedLogLevel,
   } from 'react-native-reanimated';
+import LeagueInterface from '@/infraestructure/interfaces/leagues.interface';
   
   // This is the default configuration
   configureReanimatedLogger({
@@ -15,27 +16,29 @@ import {
   });
 
 type Props = {
-    ligas: LigasData[]
+    ligas: LeagueInterface[]
 }
 
 export default function MainCarousel({ligas}:Props) {
 
     const ref = useRef<ICarouselInstance>(null) 
     const width = useWindowDimensions().width
+    
 
   return (
-    <View className='w-full h-[350]'>
+    <View className='w-full h-[400] bg-whi'>
       <Carousel 
         ref={ref}
         data={ligas}
         renderItem = {({item})=> (<LigaCarousel liga={item} />)}
-        width={300}
-        height={350}
+        width={350}
+        height={400}
         style={{
             width:width,
-            height:350,
+            height:400,
             justifyContent:"center",
             alignItems:"center",
+
         }}
         mode="parallax"
       />

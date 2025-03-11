@@ -1,42 +1,44 @@
-import { View, Text, ScrollView, Pressable, Image } from "react-native";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import ligaInterface from "@/infraestructure/interfaces/ligas";
+import { View, Text, ScrollView, Pressable, useWindowDimensions } from "react-native";
+import React, { useEffect } from "react";
 import Icon from "@expo/vector-icons/FontAwesome6";
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import TeamInterface from "@/infraestructure/interfaces/teams";
+import { router } from "expo-router";
+import { useTeamStore } from "@/presentation/store/team/useTeamStore";
+import { useAuthStore } from "@/presentation/store/auth/useAuthStore";
+import Loading from "@/presentation/components/auth/loading";
+import RequireAuthenticated from "@/presentation/components/auth/requireAuthenticated";
+import CardAnimation from "@/presentation/components/team/cardAnimation";
 
-const equipos: TeamInterface[] = [
-  {
-    name: "Cefort Neza",
-    logo: "logo",
-    id: 1,
-    playes:10
-  },
-  {
-    name: "Liga Elite",
-    logo: "logo",
-    id: 2,
-    playes:8
-  },
-  {
-    name: "Fútbol Express",
-    logo: "logo",
-    id: 3,
-    playes:15
-  },
-];
 export default function Index() {
-  // 🔹 Creamos un array de sharedValues para cada tarjeta
-  const animations = useRef(equipos.map(() => useSharedValue(0))).current;
 
-  // 🔹 Mueve solo la tarjeta seleccionada
-  const moveAnimation = (index: any) => {
-    const translateX = animations[index];
-    translateX.value =
-      translateX.value === 170 ? withTiming(0) : withTiming(170);
-  };
+  const {height} = useWindowDimensions()
+
+  const { checkStatus, status,user } = useAuthStore()
+  const { teams, saveTeams } = useTeamStore()
+
+  useEffect(() => {
+    checkStatus()
+  }, [])
+
+  useEffect(() => {
+    if (user?.id) {
+      saveTeams(user.id)
+    }
+  }, [user])
+
+
+  if (status == "checking" ) {
+    return <Loading />
+  }
+
+  if (status == "unauthenticated") {
+    return <RequireAuthenticated />
+  }
 
   return (
+    <>
+    <Pressable className='p-3 w-14 h-14 bg-light-primary rounded-full justify-center items-center absolute right-3 bottom-3 z-50' onPress={() => router.push("/teams/addTeam")}>
+      <Icon name='plus' size={24} color="white" />
+    </Pressable>
     <ScrollView
       contentContainerStyle={{
         alignItems: "center",
@@ -46,53 +48,17 @@ export default function Index() {
       style={{ flex: 1 }}
       showsVerticalScrollIndicator={false}
     >
-      {equipos.map((equipo, index) => {
-        // 🔹 Animación específica para cada tarjeta
-        const animatedStyle = useAnimatedStyle(() => ({
-          transform: [{ translateX: animations[index].value }],
-        }));
 
-        return (
-          <View key={equipo.id} className="justify-between gap-4 w-[90%] mb-10">
-            {/* Botones de fondo */}
-            <View className="absolute w-full bg-light-primary gap-5 h-full flex-row -z-10 rounded-xl items-center px-5">
-              <View className="items-center gap-1">
-                <Icon name="trash" color="white" size={18} />
-                <Text className="text-white">Eliminar</Text>
-              </View>
-              <View className="w-[0.3%] h-[60%] bg-white" />
-              <View className="items-center gap-1">
-                <Icon name="pen-to-square" color="white" size={18} />
-                <Text className="text-white">Editar</Text>
-              </View>
+      {
+          teams.length > 0 
+          ? 
+            teams.map((team) => <CardAnimation key={team.id} team={team}/>)
+          : 
+            <View className={`justify-center h-[${height}]`}>
+              <Text className="text-2xl text-light-primary text-center">Todavia no hay equipos, haz click en el boton de mas para crear uno nuevo</Text>
             </View>
-
-            {/* Contenido animado */}
-            <Animated.View style={[animatedStyle]} className="bg-white rounded-xl p-5">
-              <Pressable
-                className="w-full p-3 rounded-xl h-full absolute z-50"
-                onPress={() => moveAnimation(index)}
-              />
-              <View className="flex-row gap-3 items-center">
-                <Image
-                  source={require("@/assets/images/favoritos/NE.png")}
-                  className="w-20 h-20 items-center rounded-lg"
-                />
-                <View>
-                  <Text className="text-3xl font-bold">{equipo.name}</Text>
-                  <View className="flex-row gap-1 pt-2 items-center">
-                    <Icon name="users" size={16} />
-                    <Text> Jugadores: {equipo.playes}</Text>
-                  </View>
-                </View>
-              </View>
-            </Animated.View>
-          </View>
-        );
-      })}
-      <Pressable className="bg-light-primary p-4 rounded-2xl w-[90%] self-center mx-auto">
-        <Text className="text-center text-white text-xl">Agregar Equipo</Text>
-      </Pressable>
+      }
     </ScrollView>
+    </>
   );
 }

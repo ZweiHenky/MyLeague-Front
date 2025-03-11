@@ -16,6 +16,28 @@ export default function _layout() {
                 title:"Mis Equipos",
             }}
         />
+        <Stack.Screen 
+            name='addTeam'
+            options={{
+                headerTitleAlign:"center",
+                title:"Agregar Nuevo Equipo",
+            }}
+        />
+        <Stack.Screen 
+            name='modifyTeam/[id]'
+            options={{
+                headerTitleAlign:"center",
+                title:"Modificar Equipo",
+            }}
+        />
+        <Stack.Screen 
+            name='[idTeam]/[idUser]/showQr'
+            options={{
+                headerTitleAlign:"center",
+                title:"QR",
+                presentation:"modal"
+            }}
+        />
     </Stack>
   )
 }

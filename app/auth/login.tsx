@@ -2,7 +2,6 @@ import { View, Text, Image, Button, Pressable, TouchableOpacity, Alert } from 'r
 import React, { useState } from 'react'
 import ThemeInput from '@/presentation/shared/ThemedInput'
 import  Icon from '@expo/vector-icons/FontAwesome6'
-import { MaterialIcons } from '@expo/vector-icons';
 import AnimatedFingerprint from '@/presentation/components/auth/fingerPrint';
 import { Link, router } from 'expo-router';
 import { useAuthStore } from '@/presentation/store/auth/useAuthStore';
