@@ -7,3 +7,8 @@ export interface AuthResponse {
     email:    string;
     telefono:      string;
 }
+
+export interface RegisterResponse {
+    message: string;
+    status:  boolean;
+}
