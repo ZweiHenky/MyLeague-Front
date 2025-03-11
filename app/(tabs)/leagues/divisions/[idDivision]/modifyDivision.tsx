@@ -24,6 +24,10 @@ export default function ModifyDivision() {
     }, [])
     
 
+    const onDelete = () =>{
+
+    }
+
 
 
 
@@ -126,7 +130,7 @@ export default function ModifyDivision() {
     
                         <View className='flex-row items-center justify-between mt-2'>
     
-                            <Pressable onPress={()=> router.back()} className='w-[48%] border-light-textRed border-2 rounded-3xl p-3'>
+                            <Pressable onPress={onDelete} className='w-[48%] border-light-textRed border-2 rounded-3xl p-3'>
                                 <Text className='text-center text-light-textRed text-xl'>Eliminar</Text>
                             </Pressable>
     
