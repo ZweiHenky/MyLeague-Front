@@ -1,6 +1,6 @@
-import { Alert } from "react-native";
+
 import { myLeagueApi } from "../api/myLeaguesApi";
-import { AuthResponse } from "@/infraestructure/interfaces/authdb-response";
+import { AuthResponse, RegisterResponse } from "@/infraestructure/interfaces/authdb-response";
 import { User } from "@/infraestructure/interfaces/user.interface";
 
 const returnUserToken = (data:AuthResponse): { user:User, token:string } =>{
@@ -13,14 +13,14 @@ const returnUserToken = (data:AuthResponse): { user:User, token:string } =>{
 }
 
 
-export const authLogin = async (email:string, usu_pass:string) =>{
+export const authLogin = async (email:string, password:string) =>{
 
     email = email.toLowerCase()
 
     try {
         const { data } = await myLeagueApi.post<AuthResponse>('/auth/login',{
             email,
-            usu_pass
+            password
         })
 
         return returnUserToken(data)
@@ -31,24 +31,26 @@ export const authLogin = async (email:string, usu_pass:string) =>{
 
 }
 
-export const authRegister = async(nombre:string, apellido: string, email:string, telefono:string, usu_pass:string)=>{
+export const authRegister = async(nombre:string, apellido: string, email:string, telefono:string, password:string)=>{
+
+    email = email.toLowerCase()
 
     try {
         
-        const {data} = await myLeagueApi.post('/auth/register', {
+        const {data} = await myLeagueApi.post<RegisterResponse>('/auth/register', {
                 nombre,
                 apellido,
                 email,
                 telefono,
-                usu_pass
+                password
             }
         )
 
         return data
         
 
-    } catch (error) {
-        return error
+    } catch (error:any) {
+        return error.response
     }
 
 }
