@@ -30,7 +30,7 @@ export const GooglePlacesInput = ({ onPlaceSelected,value }:Props) => {
           }
         }}
         query={{
-          key: "AIzaSyAiAX2cRtiBDPvKIPo3v9QOHsbEepnoFac", // Reemplaza con tu clave de API
+          key: key, // Reemplaza con tu clave de API
           language: 'es',
         }}
         fetchDetails={true}
