@@ -10,6 +10,7 @@ import { uploadImage } from '@/helpers/images/uploadImage';
 import { toast } from 'sonner-native';
 import { useLeagueStore } from '@/presentation/store/league/useLeagueStore';
 import { useAuthStore } from '@/presentation/store/auth/useAuthStore';
+import { GooglePlacesInput } from '@/presentation/components/league/googlePlaceInput';
 
 const initialValues ={
   nombre:'',
@@ -64,7 +65,7 @@ export default function AddLeague() {
               <>
                 <View className='gap-4'>
                   <Text className='text-2xl'>Nombre de la liga</Text>
-                  <ThemeInput className="px-2" placeholder='Nombre' onChangeText={handleChange('nombre')} onBlur={handleBlur("nombre")} value={values.nombre} />
+                  <ThemeInput className="px-2 bg-white" placeholder='Nombre' onChangeText={handleChange('nombre')} onBlur={handleBlur("nombre")} value={values.nombre} />
 
                   {
                     errors.nombre && touched.nombre && (
@@ -77,7 +78,12 @@ export default function AddLeague() {
                 </View>
                 <View className='gap-4'>
                   <Text className='text-2xl'>Direccion</Text>
-                  <ThemeInput className="px-2" placeholder='Direccion' onChangeText={handleChange('direccion')} onBlur={handleBlur("direccion")} value={values.direccion} />
+                  <GooglePlacesInput 
+                    onPlaceSelected={(data, details) => {
+                      // Actualiza el valor del campo "direccion" en Formik con la dirección seleccionada
+                      setFieldValue('direccion', data.description);
+                    }}
+                  />
                 </View>
 
                 {
@@ -88,10 +94,13 @@ export default function AddLeague() {
                   )
                 }
 
+                
+
+
                 <View className='gap-4'>
                   <Text className='text-2xl'>Selecciona un logo</Text>
-                    <TouchableOpacity className='py-4 px-2 rounded-2xl bg-gray-100' onPress={() => pickImageAsync(setFieldValue)}>
-                        <Text>Seleccionar un logo</Text>
+                    <TouchableOpacity className='py-4 px-2 rounded-2xl bg-white' onPress={() => pickImageAsync(setFieldValue)}>
+                        <Text>Haz click para seleccionar un logo</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -110,7 +119,7 @@ export default function AddLeague() {
                 <View className='gap-4'>
                   <Text className='text-2xl'>Agrega una descripcion</Text>
                   <ThemeInput
-                    className="px-2"
+                    className="px-2 bg-white"
                     placeholder='Descripción de la liga'
                     multiline
                     numberOfLines={4}

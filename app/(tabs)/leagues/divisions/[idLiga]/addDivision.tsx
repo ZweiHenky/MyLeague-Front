@@ -4,11 +4,9 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Formik } from 'formik'
 import { useAuthStore } from '@/presentation/store/auth/useAuthStore'
-import { useLeagueStore } from '@/presentation/store/league/useLeagueStore'
 import ThemeInput from '@/presentation/shared/ThemedInput'
 import { addDivisionSchema } from '@/infraestructure/schemas/addDivisionSchema'
-import { useDivisionStore } from '@/presentation/store/division/useDivisionStore'
-import { toast } from 'sonner-native'
+import { useDivisionMutation } from '@/hooks/divisions/useDivisionMutation'
 
 const initialValues ={
     nombre:'',
@@ -19,8 +17,8 @@ const initialValues ={
 
 export default function addDivision() {
     const {user} = useAuthStore()
-    const { newDivision } = useDivisionStore()
     const { idLiga } = useLocalSearchParams()
+     const { mutateNewDivision } = useDivisionMutation()
   
     return (
     <KeyboardAwareScrollView
@@ -35,17 +33,11 @@ export default function addDivision() {
                 validationSchema={addDivisionSchema}
 
                 onSubmit={async(values, actions)=>{
-
-                    const res = await newDivision(values.nombre, Number(values.premio), Number(values.arbitraje), values.descripcion, Number(idLiga))
-
-                    if (res) {
-                        toast.success("Se creo la division con exito")
-                        router.back()
-                    }
                     
-                    toast.error("Ocurrio un error inesperado")
-                    
+                    mutateNewDivision.mutate( {nombre:values.nombre, arbitraje:Number(values.arbitraje), premio:Number(values.premio), descripcion:values.descripcion, idLiga:Number(idLiga)} )
+
                     actions.setSubmitting(false)
+                    
                 }}  
             >
 
@@ -117,7 +109,7 @@ export default function addDivision() {
                             <Text className='text-center text-light-textRed text-xl'>Cancelar</Text>
                         </Pressable>
 
-                        <Pressable onPress={submitForm} disabled={isSubmitting} className='w-[48%] rounded-3xl bg-light-primary p-3'>
+                        <Pressable onPress={submitForm} disabled={mutateNewDivision.isPending} className='w-[48%] rounded-3xl bg-light-primary p-3'  style={{opacity: mutateNewDivision.isPending ? 0.5 : 1}}>
                             <Text className='text-center text-white text-xl'>Agregar</Text>
                         </Pressable>
 

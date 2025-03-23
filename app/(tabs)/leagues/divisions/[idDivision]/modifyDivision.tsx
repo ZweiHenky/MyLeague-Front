@@ -8,27 +8,21 @@ import { addDivisionSchema } from '@/infraestructure/schemas/addDivisionSchema'
 import { useDivisionStore } from '@/presentation/store/division/useDivisionStore'
 import { DivisionInterface } from '@/infraestructure/interfaces/divisions.interface'
 import { toast } from 'sonner-native'
+import { useDivision } from '@/hooks/divisions/useDivision'
+import { useDivisionMutation } from '@/hooks/divisions/useDivisionMutation'
 
 export default function ModifyDivision() {
 
     const {idDivision} = useLocalSearchParams()
-    const {divisions, updateDivision} = useDivisionStore()
-    const [division, setDivision] = useState<DivisionInterface>()
 
-    useEffect(() => {
+    const {divisionIdQuery} = useDivision({idDivision:Number(idDivision)})
 
-        const result = divisions.find(div => div.id == Number(idDivision))
+    const { mutateUpdateDivision, mutateDeleteDivision } = useDivisionMutation()
 
-        setDivision(result)
 
-    }, [])
-    
-
-    const onDelete = () =>{
-
+    const onDelete = async() =>{
+        mutateDeleteDivision.mutate({idDivision:Number(idDivision)})
     }
-
-
 
 
   return (
@@ -41,25 +35,17 @@ export default function ModifyDivision() {
             <View className='p-5 gap-5 mb-10'>
                 <Formik
                     initialValues={{
-                        nombre: division?.nombre,
-                        premio:String(division?.premio),
-                        descripcion:division?.descripcion,
-                        arbitraje:String(division?.arbitraje)
+                        nombre: divisionIdQuery.data?.data.nombre,
+                        premio:String(divisionIdQuery.data?.data.premio),
+                        descripcion:divisionIdQuery.data?.data.descripcion,
+                        arbitraje:String(divisionIdQuery.data?.data.arbitraje)
                     }}
                     validationSchema={addDivisionSchema}
     
                     onSubmit={async(values, actions)=>{
 
-                        const res = await updateDivision(division!.id, values.nombre!, Number(values.premio), Number(values.arbitraje), values.descripcion!)
+                        mutateUpdateDivision.mutate({idDivision:Number(idDivision), nombre:values.nombre, premio:Number(values.premio), arbitraje:Number(values.arbitraje), descripcion:values.descripcion, idLiga:divisionIdQuery.data?.data.liga.id})
 
-
-                        if (res) {
-                            toast.success("Se actualizo con exito")
-                            router.back()
-                            return
-                        }
-
-                        toast.error("Ocurrio un problema")
                         actions.resetForm()
                         actions.setSubmitting(false)
                     }}  
@@ -130,11 +116,11 @@ export default function ModifyDivision() {
     
                         <View className='flex-row items-center justify-between mt-2'>
     
-                            <Pressable onPress={onDelete} className='w-[48%] border-light-textRed border-2 rounded-3xl p-3'>
+                            <Pressable onPress={onDelete} disabled={mutateDeleteDivision.isPending} style={{opacity: mutateDeleteDivision.isPending ? 0.5 : 1}} className='w-[48%] border-light-textRed border-2 rounded-3xl p-3'>
                                 <Text className='text-center text-light-textRed text-xl'>Eliminar</Text>
                             </Pressable>
     
-                            <Pressable onPress={submitForm} disabled={isSubmitting} className='w-[48%] rounded-3xl bg-light-primary p-3'>
+                            <Pressable onPress={submitForm} disabled={mutateUpdateDivision.isPending} className='w-[48%] rounded-3xl bg-light-primary p-3' style={{opacity: mutateUpdateDivision.isPending ? 0.5 : 1}}>
                                 <Text className='text-center text-white text-xl'>Actualizar</Text>
                             </Pressable>
     

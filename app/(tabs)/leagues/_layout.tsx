@@ -2,6 +2,7 @@ import { View, Text, Pressable } from 'react-native'
 import React, { useEffect } from 'react'
 import { router, Stack } from 'expo-router'
 import Icon from '@expo/vector-icons/FontAwesome6'
+import 'react-native-get-random-values';
 
 export default function _layout() {
   
@@ -46,7 +47,7 @@ export default function _layout() {
         />
 
         <Stack.Screen 
-            name='divisions/addDivision'
+            name='divisions/[idLiga]/addDivision'
             options={{
                 headerTitleAlign:"center",
                 title:"Agregar Division",
@@ -58,6 +59,32 @@ export default function _layout() {
             options={{
                 headerTitleAlign:"center",
                 title:"Modificar Division",
+            }}
+        />
+
+        <Stack.Screen 
+            name='divisions/[idDivision]/teamDivision'
+            options={{
+                headerTitleAlign:"center",
+                title:"Equipos por Division",
+            }}
+        />
+        <Stack.Screen 
+            name='divisions/[idDivision]/readingQr'
+        />
+
+        <Stack.Screen 
+            name='matchday/[idDivision]/generateMatchdays'
+            options={{
+                headerTitleAlign:"center",
+                title:"Agregar Jornadas",
+            }}
+        />
+        <Stack.Screen 
+            name='matchday/[idDivision]/index'
+            options={{
+                headerTitleAlign:"center",
+                title:"Jornadas",
             }}
         />
 

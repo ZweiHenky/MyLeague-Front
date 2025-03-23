@@ -1,7 +1,6 @@
 import { View, Text, useWindowDimensions } from 'react-native'
 import React, { useRef } from 'react'
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
-import { LigasData } from './types';
 import LigaCarousel from './LigaCarousel';
 import {
     configureReanimatedLogger,
@@ -26,7 +25,7 @@ export default function MainCarousel({ligas}:Props) {
     
 
   return (
-    <View className='w-full h-[400] bg-whi'>
+    <View className='w-full h-[400]'>
       <Carousel 
         ref={ref}
         data={ligas}

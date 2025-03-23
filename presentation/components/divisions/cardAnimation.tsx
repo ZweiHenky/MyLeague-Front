@@ -34,12 +34,12 @@ export default function CardAnimation({division}:Props) {
             <Text className="text-white">Editar</Text>
           </Pressable>
           <View className="w-[0.3%] h-[60%] bg-white" />
-          <Pressable className="items-center gap-1 w-[20%]" onPress={()=>router.push("/leagues/divisions/9")} >
+          <Pressable className="items-center gap-1 w-[20%]" onPress={()=>router.push(`/leagues/divisions/${division.id}/teamDivision`)} >
             <Icon name="eye" color="white" size={18} />
             <Text className="text-white">Equipos</Text>
           </Pressable>
           <View className="w-[0.3%] h-[60%] bg-white " />
-          <Pressable className="items-center gap-1 w-[20%]">
+          <Pressable className="items-center gap-1 w-[20%]" onPress={()=>router.push(`/leagues/matchday/${division.id}`)} >
             <Icon name="calendar-days" color="white" size={18} />
             <Text className="text-white">Jornadas</Text>
           </Pressable>

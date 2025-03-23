@@ -1,5 +1,7 @@
 import { ListLeagueResponse, PostLeagueResponse } from "@/infraestructure/interfaces/leaguedb-response"
 import { teamsLeaguesApi } from "../api/teamsLeaguesApi"
+import LeagueInterface from "@/infraestructure/interfaces/leagues.interface"
+import { myLeagueApi } from "../api/myLeaguesApi"
 
 
 export const getLeaguesByIdUser = async(idUser:number)=> {
@@ -13,6 +15,19 @@ export const getLeaguesByIdUser = async(idUser:number)=> {
         return error.response.data
     }
 
+}
+export const getLeaguesByName = async(nombre:string)=> {
+
+    const { data } = await myLeagueApi.get<LeagueInterface[]>(`/leagues/search?nombre=${nombre}`)
+    
+    return data
+}
+
+export const getAllLeague = async(page:number)=> {
+
+    const { data } = await myLeagueApi.get<LeagueInterface[]>(`/leagues/search?nombre=&page=${page}`)
+    
+    return data
 }
 
 export const postLeague = async(nombre:string, direccion:string, descripcion:string, logo:string, idUser:number):Promise<PostLeagueResponse>=> {

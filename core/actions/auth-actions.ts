@@ -3,12 +3,13 @@ import { myLeagueApi } from "../api/myLeaguesApi";
 import { AuthResponse, RegisterResponse } from "@/infraestructure/interfaces/authdb-response";
 import { User } from "@/infraestructure/interfaces/user.interface";
 
-const returnUserToken = (data:AuthResponse): { user:User, token:string } =>{
-    const {token, ...user} = data
+const returnUserToken = (data:AuthResponse): { user:User, token:string, refreshToken:string } =>{
+    const {token, refreshToken, ...user} = data
 
     return {
         user,
         token,
+        refreshToken
     }
 }
 
@@ -58,8 +59,21 @@ export const authRegister = async(nombre:string, apellido: string, email:string,
 export const authCheckStatus = async () =>{
 
     try {
-        
         const { data } = await myLeagueApi.get<AuthResponse>('/auth/verifyToken')
+        return returnUserToken(data)
+    } catch (error) {
+        console.log(error);
+        return null
+    }
+
+}
+export const authCheckToken = async (refreshToken:string) =>{
+
+    try {
+        
+        const { data } = await myLeagueApi.post('/auth/verifyRefresh',{
+            refreshToken
+        })
         
         return returnUserToken(data)
 

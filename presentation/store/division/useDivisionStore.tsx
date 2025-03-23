@@ -61,8 +61,8 @@ export const useDivisionStore = create<divisionState>()( (set, get)=>({
     deleteDivision: async (idDivision:number) =>{
 
         const res = await deleteDivision(idDivision)
-
-        if (!res.status) {
+        
+        if (!res) {
             return false
         }
 

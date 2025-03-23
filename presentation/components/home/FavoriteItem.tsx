@@ -1,7 +1,7 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, Pressable } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import { LigasData } from './types';
 import LeagueInterface from '@/infraestructure/interfaces/leagues.interface';
+import { router } from 'expo-router';
 
 type Props = {
     item: LeagueInterface
@@ -10,12 +10,12 @@ type Props = {
 export default function FavoriteItem  ({item}:Props) {
 
     
-    const {nombre, logo} = item
+    const {nombre, logo, id} = item
 
     return(
-      <View className=' mx-2 h-[120] w-[200] items-center '>
+      <Pressable className=' mx-2 h-[140] w-[160] items-center' onPress={()=> router.push(`/home/${id}`)}>
         <Image
-         source={require('../../../assets/images/favoritos/logo.jpg')} 
+         source={{uri:logo}} 
          className='w-full h-full absolute rounded-lg object-contain'
          />
          <View className='w-[100%] h-[99%] items-center justify-center'>
@@ -26,6 +26,6 @@ export default function FavoriteItem  ({item}:Props) {
             <Text className='text-white p-1 text-center text-lg '>{nombre}</Text>
           </LinearGradient>
          </View>
-      </View>
+      </Pressable>
     )
   }

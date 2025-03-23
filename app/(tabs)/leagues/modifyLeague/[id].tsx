@@ -11,6 +11,7 @@ import { toast } from 'sonner-native';
 import { useLeagueStore } from '@/presentation/store/league/useLeagueStore';
 import { useAuthStore } from '@/presentation/store/auth/useAuthStore';
 import LeagueInterface from '@/infraestructure/interfaces/leagues.interface';
+import { GooglePlacesInput } from '@/presentation/components/league/googlePlaceInput';
 
 export default function ModifyLeague() {
     
@@ -108,7 +109,13 @@ export default function ModifyLeague() {
                 </View>
                 <View className='gap-4'>
                   <Text className='text-2xl'>Direccion</Text>
-                  <ThemeInput className="px-2" placeholder='Direccion' onChangeText={handleChange('direccion')} onBlur={handleBlur("direccion")} value={values.direccion} />
+                  <GooglePlacesInput 
+                    onPlaceSelected={(data, details) => {
+                      // Actualiza el valor del campo "direccion" en Formik con la dirección seleccionada
+                      setFieldValue('direccion', data.description);
+                    }}
+                    value={values.direccion}
+                  />
                 </View>
 
                 {
@@ -164,7 +171,7 @@ export default function ModifyLeague() {
                   </Pressable>
 
                   <Pressable onPress={submitForm} disabled={isSubmitting} className='w-[48%] rounded-3xl bg-light-primary p-3'>
-                      <Text className='text-center text-white text-xl'>Agregar</Text>
+                      <Text className='text-center text-white text-xl'>Modificar</Text>
                   </Pressable>
 
                 </View>
