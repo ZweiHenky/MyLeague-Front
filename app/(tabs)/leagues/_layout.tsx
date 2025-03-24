@@ -87,6 +87,20 @@ export default function _layout() {
                 title:"Jornadas",
             }}
         />
+        <Stack.Screen 
+            name='matchday/[idMatchday]/detailMatchday'
+            options={{
+                headerTitleAlign:"center",
+                title:"Detalle de la jornada",
+            }}
+        />
+        <Stack.Screen 
+            name='matchday/[idMatch]/updateMatch'
+            options={{
+                headerTitleAlign:"center",
+                title:"Asignar Resultado",
+            }}
+        />
 
     </Stack>
   )

@@ -3,7 +3,7 @@ import React from 'react';
 import LeagueInterface from '@/infraestructure/interfaces/leagues.interface';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from '@expo/vector-icons/FontAwesome6';
-import { router } from 'expo-router';
+import { Href, router } from 'expo-router';
 import { useFavoriteStore } from '@/presentation/store/favorite/useFavoriteStore';
 
 interface Props {
@@ -23,7 +23,7 @@ export default function LigaCarousel({ liga }: Props) {
   };
 
   return (
-    <Pressable onPress={() => router.push(`/home/${liga.id}/`)}>
+    <Pressable onPress={() => router.push(`/detailLeague/${liga.id}/` as Href)}>
       <View className='px-5 items-center h-full'>
         <LinearGradient
           colors={['black', 'transparent']}

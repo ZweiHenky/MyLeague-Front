@@ -16,7 +16,7 @@ export default function TeamItem({id, nombre, usuario, index, onDelete}:Props) {
 
         <View className=' w-[10%]' >
             <Text className='flex-shrink ' numberOfLines={1} ellipsizeMode='tail'>
-                {index}
+                {index+1}
             </Text>
        </View>
 

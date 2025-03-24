@@ -3,6 +3,10 @@ import { SafeAreaView, Text, Pressable, StyleSheet, Modal, View, ScrollView, Pla
 import { Calendar } from 'react-native-calendars';
 import { RadioButton } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import ThemeInput from '@/presentation/shared/ThemedInput';
+import { object } from 'yup';
+import { useMatchDayMutation } from '@/hooks/matchDay/useMatchDayMutation';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function GenerateMatchDay() {
   const [selectedDates, setSelectedDates] = useState({}); // Fechas seleccionadas
@@ -12,6 +16,12 @@ export default function GenerateMatchDay() {
   const [commonEndTime, setCommonEndTime] = useState(new Date()); // Hora final común
   const [individualTimes, setIndividualTimes] = useState({}); // Horas individuales por fecha
   const [showTimePicker, setShowTimePicker] = useState({}); // Controla la visibilidad del TimePicker
+  const [numero, setNumero] = useState<string>()
+  const [intervalo, setIntervalo] = useState<string>()
+
+  const {idDivision} = useLocalSearchParams()
+
+  const {queryMatchdayMutation} = useMatchDayMutation()
 
   // Función para manejar la selección de fechas
   const handleDayPress = (day) => {
@@ -110,121 +120,152 @@ export default function GenerateMatchDay() {
     </View>
   ));
 
+  const onSubmit = async() =>{
+
+    const dias = Object.keys(selectedDates).map(fecha => ({
+      dias:fecha,
+      horaInicio:commonStartTime.toLocaleString("en-US", { hour12: false }).split(",")[1].split(" ")[1],
+      horaFinal:commonEndTime.toLocaleString("en-US", { hour12: false }).split(",")[1].split(" ")[1]
+    }))
+
+    const data = {
+      dias,
+      numero:Number(numero),
+      lapsoTiempo:Number(intervalo),
+      divisionId: Number(idDivision)
+    }
+
+    queryMatchdayMutation.mutate(data)
+
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Select Match Dates</Text>
+      <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
 
-      {/* Botón para desplegar el calendario */}
-      <Pressable
-        style={styles.button}
-        onPress={() => setIsCalendarVisible(!isCalendarVisible)}
-      >
-        <Text style={styles.buttonText}>
-          {isCalendarVisible ? 'Ocultar Calendario' : 'Mostrar Calendario'}
-        </Text>
-      </Pressable>
+        <Text className='py-2 text-lg'>Numero de la jornada</Text>
+        <ThemeInput keyboardType="numeric" placeholder='Ingresar el numero' onChangeText={setNumero} />
+        <Text className='py-2 text-lg'>Duracion por partido</Text>
+        <ThemeInput keyboardType="numeric" placeholder='Intervalo de tiempo para cada partido' onChangeText={setIntervalo} />
 
-      {/* Modal para mostrar el calendario */}
-      <Modal
-        visible={isCalendarVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setIsCalendarVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.calendarContainer}>
-            <Calendar
-              onDayPress={handleDayPress} // Maneja la selección de fechas
-              markedDates={selectedDates} // Resalta las fechas seleccionadas
-              markingType="multi-dot" // Estilo de marcado
-              theme={{
-                calendarBackground: '#ffffff',
-                selectedDayBackgroundColor: 'blue',
-                selectedDayTextColor: '#ffffff',
-                todayTextColor: 'blue',
-                dayTextColor: '#2d4150',
-              }}
-            />
-            <Pressable
-              style={styles.closeButton}
-              onPress={() => setIsCalendarVisible(false)}
-            >
-              <Text style={styles.closeButtonText}>Cerrar</Text>
-            </Pressable>
+        {/* Botón para desplegar el calendario */}
+        <Pressable
+          style={styles.button}
+          onPress={() => setIsCalendarVisible(!isCalendarVisible)}
+        >
+          <Text style={styles.buttonText}>
+            {isCalendarVisible ? 'Ocultar Calendario' : 'Seleccionar Fechas'}
+          </Text>
+        </Pressable>
+
+        {/* Modal para mostrar el calendario */}
+        <Modal
+          visible={isCalendarVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setIsCalendarVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.calendarContainer}>
+              <Calendar
+                onDayPress={handleDayPress} // Maneja la selección de fechas
+                markedDates={selectedDates} // Resalta las fechas seleccionadas
+                markingType="multi-dot" // Estilo de marcado
+                theme={{
+                  calendarBackground: '#ffffff',
+                  selectedDayBackgroundColor: 'blue',
+                  selectedDayTextColor: '#ffffff',
+                  todayTextColor: 'blue',
+                  dayTextColor: '#2d4150',
+                }}
+              />
+              <Pressable
+                style={styles.closeButton}
+                onPress={() => setIsCalendarVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Mostrar las fechas seleccionadas */}
-      {selectedDatesList.length > 0 && (
-        <View style={styles.selectedDatesContainer}>
-          <Text style={styles.subtitle}>Fechas seleccionadas:</Text>
-          <ScrollView>
-            {selectedDatesList}
-          </ScrollView>
-        </View>
-      )}
+        {/* Mostrar las fechas seleccionadas */}
+        {selectedDatesList.length > 0 && (
+          <View style={styles.selectedDatesContainer}>
+            <Text style={styles.title}>Fechas seleccionadas:</Text>
+            <ScrollView>
+              {selectedDatesList}
+            </ScrollView>
+          </View>
+        )}
 
-      {/* Mostrar opciones de selección si hay fechas seleccionadas */}
-      {selectedDatesList.length > 0 && (
-        <View style={styles.radioButtonContainer}>
-          <Text style={styles.radioButtonTitle}>Selecciona una opción:</Text>
-          <RadioButton.Group
-            onValueChange={(value) => setSelectedOption(value)}
-            value={selectedOption}
-          >
-            <View style={styles.radioButtonOption}>
-              <RadioButton value="option1" />
-              <Text style={styles.radioButtonText}>Asignar horas comunes a todos los días</Text>
-            </View>
-            <View style={styles.radioButtonOption}>
-              <RadioButton value="option2" />
-              <Text style={styles.radioButtonText}>Asignar horas individuales por día</Text>
-            </View>
-          </RadioButton.Group>
+        {/* Mostrar opciones de selección si hay fechas seleccionadas */}
+        {selectedDatesList.length > 0 && (
+          <View style={styles.radioButtonContainer}>
+            <Text style={styles.radioButtonTitle}>Selecciona una opción:</Text>
+            <RadioButton.Group
+              onValueChange={(value) => setSelectedOption(value)}
+              value={selectedOption}
+            >
+              <View style={styles.radioButtonOption}>
+                <RadioButton value="option1" />
+                <Text style={styles.radioButtonText}>Asignar horas comunes a todos los días</Text>
+              </View>
+              <View style={styles.radioButtonOption}>
+                <RadioButton value="option2" />
+                <Text style={styles.radioButtonText}>Asignar horas individuales por día</Text>
+              </View>
+            </RadioButton.Group>
 
-          {/* Mostrar TimePicker para horas comunes si la opción 1 está seleccionada */}
-          {selectedOption === 'option1' && (
-            <View style={styles.commonTimeContainer}>
-              <Text style={styles.timeLabel}>Hora inicial común:</Text>
-              <Pressable
-                style={styles.timeButton}
-                onPress={() => setShowTimePicker({ ...showTimePicker, start: true })}
-              >
-                <Text style={styles.timeButtonText}>
-                  {commonStartTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </Text>
-              </Pressable>
-              {showTimePicker.start && (
-                <DateTimePicker
-                  value={commonStartTime}
-                  mode="time"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  onChange={(event, selectedTime) => handleCommonTimeChange('start', event, selectedTime)}
-                />
-              )}
+            {/* Mostrar TimePicker para horas comunes si la opción 1 está seleccionada */}
+            {selectedOption === 'option1' && (
+              <View style={styles.commonTimeContainer}>
+                <Text style={styles.timeLabel}>Hora inicial común:</Text>
+                <Pressable
+                  style={styles.timeButton}
+                  onPress={() => setShowTimePicker({ ...showTimePicker, start: true })}
+                >
+                  <Text style={styles.timeButtonText}>
+                    {commonStartTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </Text>
+                </Pressable>
+                {showTimePicker.start && (
+                  <DateTimePicker
+                    value={commonStartTime}
+                    mode="time"
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    onChange={(event, selectedTime) => handleCommonTimeChange('start', event, selectedTime)}
+                  />
+                )}
 
-              <Text style={styles.timeLabel}>Hora final común:</Text>
-              <Pressable
-                style={styles.timeButton}
-                onPress={() => setShowTimePicker({ ...showTimePicker, end: true })}
-              >
-                <Text style={styles.timeButtonText}>
-                  {commonEndTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </Text>
-              </Pressable>
-              {showTimePicker.end && (
-                <DateTimePicker
-                  value={commonEndTime}
-                  mode="time"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  onChange={(event, selectedTime) => handleCommonTimeChange('end', event, selectedTime)}
-                />
-              )}
-            </View>
-          )}
-        </View>
-      )}
+                <Text style={styles.timeLabel}>Hora final común:</Text>
+                <Pressable
+                  style={styles.timeButton}
+                  onPress={() => setShowTimePicker({ ...showTimePicker, end: true })}
+                >
+                  <Text style={styles.timeButtonText}>
+                    {commonEndTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </Text>
+                </Pressable>
+                {showTimePicker.end && (
+                  <DateTimePicker
+                    value={commonEndTime}
+                    mode="time"
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    onChange={(event, selectedTime) => handleCommonTimeChange('end', event, selectedTime)}
+                  />
+                )}
+              </View>
+            )}
+
+          </View>
+          
+        )}
+        <Pressable className='w-full p-4 bg-light-primary rounded-xl mt-5' onPress={onSubmit}>
+          <Text className='text-white text-xl text-center'>Agregar Jornada</Text>
+        </Pressable>
+        <View className='h-20'/>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -244,7 +285,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    backgroundColor: '#007BFF',
+    backgroundColor: '#0E7C7B',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',

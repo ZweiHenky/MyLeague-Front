@@ -2,6 +2,7 @@ import { ListLeagueResponse, PostLeagueResponse } from "@/infraestructure/interf
 import { teamsLeaguesApi } from "../api/teamsLeaguesApi"
 import LeagueInterface from "@/infraestructure/interfaces/leagues.interface"
 import { myLeagueApi } from "../api/myLeaguesApi"
+import { DetailLeagueResponse } from "@/infraestructure/interfaces/detailAllLeaguedb.-response"
 
 
 export const getLeaguesByIdUser = async(idUser:number)=> {
@@ -83,4 +84,11 @@ export const deleteLeague = async(idLiga:number) =>{
     } catch (error:any) {
         return false
     }
+}
+
+export const getDetailAllLeague = async(idLiga:number) => {
+
+    const {data} = await teamsLeaguesApi.get<DetailLeagueResponse>(`/ligas/detallesGenerales/${idLiga}`)
+    
+    return data
 }

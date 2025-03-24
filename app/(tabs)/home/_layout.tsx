@@ -9,6 +9,7 @@ import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-nativ
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import InputSearch from '@/presentation/components/home/inputSearch';
+import { MyLocation } from '@/presentation/components/home/myLocation';
 
 export default function _layout ()  {
     
@@ -47,7 +48,7 @@ export default function _layout ()  {
                                 </LinearGradient>
         
                                     <View className='flex-row items-center px-5 py-4 gap-5 justify-between'>
-                                        <Text className='text-white'>Lago Cuitzeo 107</Text>
+                                        <MyLocation />
         
                                         <Pressable onPress={()=> router.replace("../../auth/login")}>
                                             <View className="relative px-4 py-3 ">

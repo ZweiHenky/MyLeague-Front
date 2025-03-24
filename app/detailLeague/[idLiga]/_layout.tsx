@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useLocalSearchParams } from 'expo-router';
 import { Platform, Pressable, Text, TouchableOpacity, View, ScrollView } from 'react-native';
@@ -8,11 +8,12 @@ import Resultados from './resultados';
 import Horarios from './horarios';
 import Clasificacion from './clasificacion';
 import Brackets from './brackets';
+import { useEffect, useRef } from 'react';
 
 function MyTabBar({ state, descriptors, navigation, position }:any) {
-  const scrollViewRef = React.useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ x: state.index * 85, animated: true });
     }

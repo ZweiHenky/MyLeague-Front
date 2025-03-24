@@ -19,12 +19,7 @@ export const useLeague = ({nombre}:Props) =>{
         queryFn: ({pageParam})=>{
             return getAllLeague(pageParam)
         },
-        getNextPageParam: (lastPage, allPages) => {
-            // Suponiendo que lastPage tiene un campo `hasNextPage`
-            // Si la última página tiene datos, devuelve el número de la siguiente página
-            console.log(lastPage.length);
-            console.log();
-            
+        getNextPageParam: (lastPage, allPages) => {            
             
             if (lastPage.length > 0) {
                 return allPages.length + 1;

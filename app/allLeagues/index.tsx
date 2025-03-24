@@ -10,9 +10,6 @@ export default function index() {
 
     const {queryInfinityLeague} = useLeague({nombre : ""})
 
-    console.log(queryInfinityLeague.data);
-    
-
   return (
     <Pressable className='flex-1'>
       <FlatList 

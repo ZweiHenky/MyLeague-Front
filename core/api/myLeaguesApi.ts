@@ -7,7 +7,7 @@ const API_URL = process.env.EXPO_PUBLIC_URL_API_ANDROID
 const API_URL_LOCAL = process.env.EXPO_PUBLIC_URL_API_ANDROID_LOCAL
 
 const myLeagueApi = axios.create({
-    baseURL: API_URL_LOCAL,
+    baseURL: API_URL,
 })
 
 myLeagueApi.interceptors.request.use( async (config)=>{

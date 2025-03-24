@@ -20,7 +20,7 @@ export default function _layout() {
       tabBarInactiveTintColor: "#8E8E93",
       headerShown: false,
       tabBarShowLabel:false,
-      animation:"none",
+      animation:"shift",
       tabBarButton: (props) => <TouchableOpacity {...props} activeOpacity={1} />,
     }}
   >

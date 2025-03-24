@@ -4,13 +4,35 @@ import Icon from '@expo/vector-icons/FontAwesome6'
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {Picker} from '@react-native-picker/picker';
+import { useDetailLeagueStore } from '@/presentation/store/detailAllLeague/useDetailLeagueStore';
 
 export default function _layout ()  {
-    
+
+    const {divisions, selectDivisionActual} = useDetailLeagueStore()
+
+    // Función para manejar el cambio de valor
+    const handleValueChange = (itemValue:number) => {
+        if (itemValue == 0) return; // Ignorar el valor "Cargando..."
+        const selectedDivision = divisions!.find(el => el.id == itemValue)
+        if (selectedDivision) {
+            selectDivisionActual(selectedDivision);
+        }
+    };
+
+        // Ejecutar onValueChange con el valor por defecto cuando divisions se cargue
+        useEffect(() => {
+            
+                if (divisions && divisions.length > 0) {
+                    const defaultValue = divisions![0].id; // Primera opción como valor por defecto
+                    handleValueChange(defaultValue);
+                }
+            
+        }, [divisions]); // Se ejecuta cuando divisions cambia
+
   return (
   <>
     <LinearGradient
@@ -54,13 +76,19 @@ export default function _layout ()  {
                                         <Text className='text-white text-xl'>Division:</Text>
                                         <View className='bg-[#F5F7F938] rounded-[25px] h-10 justify-center'>
                                             <Picker
-                                                style={{width:120, color:'white'}}
-                                                selectedValue={1}
-                                                onValueChange={(itemValue, itemIndex) => console.log(itemValue)}
+                                                style={{width:160, color:'white'}}
+                                                selectedValue={divisions && divisions.length > 0 ? divisions[0].id : 0}
+                                                onValueChange={handleValueChange}
                                             >
-                                                <Picker.Item style={{fontSize:14}} label="Opcion 1" value="1" />
-                                                <Picker.Item label="Opcion 2" value="2" />
-                                                <Picker.Item label="Opcion 3" value="3" />
+                                                {
+                                                    divisions ?
+                                                    divisions?.map((el,index)=>(
+                                                        <Picker.Item label={el.nombre} value={el.id}  key={el.id}/>
+                                                    ))
+                                                    : <Picker.Item label="Cargando..." value="0" />
+                                                    
+                                                }
+
                                             </Picker>
                                         </View>
                                     </View>

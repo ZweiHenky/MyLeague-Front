@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, TextInput, ScrollView, FlatList, Pressable } from 'react-native';
-import Autocomplete from 'react-native-autocomplete-input';
 import LeagueInterface from '@/infraestructure/interfaces/leagues.interface';
 import { useLeague } from '@/hooks/leagues/useLeague';
 import { useDebounce } from 'use-debounce';
